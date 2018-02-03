@@ -6,7 +6,7 @@ img{
     border:none;
 }
 .selector_container table{
-    background-color:#5CDB95;
+    background-color:#ba9077;
 }
 
 td.status-container
@@ -317,7 +317,7 @@ span.message{
 }
 .box-white
 {
-    background-color:white;
+    background-color:#b0aac2;
 }
 .box-inactive
 {
@@ -334,7 +334,7 @@ span.message{
 table.container-table { 
     border-spacing: 5px;
     border-collapse: separate;
-    background-color:#ebeff2;
+    background-color:#fae596;
     height:550px;
 }
 .container-table .td-header

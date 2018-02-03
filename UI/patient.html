@@ -1,6 +1,12 @@
 <html>
 <head>
     <title> Patient </title>
+<style>
+body  {
+    background-image: url("paper.gif");
+    background-color: #cccccc;
+}
+</style>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -18,16 +24,23 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav">
                 <li> <a href="index.html">Home</a>
-                <li> <a href = "src/patient.html">Patients</a> </li>
-                <li> <a href = "src/hospitals.html">Hospitals</a> </li>
+                <li> <a href = "patient.html">Patients</a> </li>
+                <li> <a href = "hospitals.html">Hospitals</a> </li>
                 <li> <a href = "record.php">Symptoms</a> </li>
             </ul>
         </div>
     </div>
 </nav>
-<br> <br>
+<br> <br> <br>
 <body bgcolor="#e6e6ff">
+<<<<<<< HEAD:UI/src/patient.html
 <form action="/patient_url/" method="POST">
+=======
+<center>
+
+<form action="/patient_url/" method="post">
+    <legend> <center>Register Patient</center> </legend>
+>>>>>>> 87c1fb57ae0a46e2aff9dc1f947f7510379999bc:UI/patient.html
     <label for="patient_name">Enter name: </label>
     <input id="patient_name" type="text" name="patient_name">
     <br>
@@ -65,7 +78,9 @@
     <input id="previous_disease" type="text" name="previous_disease">
     <br>
     <input type="submit" value="OK">
+
 </form>
+</center>
 </body>
 <footer>
     <p class = "copy"> &copy Dexter corporation India</p>

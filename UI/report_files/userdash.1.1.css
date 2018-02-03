@@ -1,0 +1,84 @@
+.topbar-btn {
+    display: inline-block;
+    padding-top: 4px;
+    padding-bottom: 3px;
+    padding-right: 20px;
+    padding-left: 22px;
+    border: 1px solid #e5e5e5;
+    background-color: #fff;
+    height: 32px;
+    border-radius: 0px;
+    font-size: 15px;
+    white-space: normal;
+    position: relative;
+}
+
+.topbar-back-btn {
+    width: 93px;
+}
+
+.topbar-event-btn {
+    width: 117px;
+    border-left: 0;
+}
+
+.topbar-reco-btn {
+    border-left: 0;
+    text-align: center;
+    width: 202px;
+}
+
+.topbar-shortlist-btn {
+    text-align: center;
+    width: 176px;
+}
+
+.topbar-visit-btn {
+    text-align: center;
+    width: 98px;
+}
+
+.topbar-booked-btn {
+    text-align: center;
+    width: 152px;
+}
+
+.step-checked {
+    color: #008000;
+}
+
+.step-unchecked {
+    color: #ff0000;
+}
+
+.topbar-mobi-sticky {
+    width: 100%;
+    position: fixed;
+    top: 45px;
+    z-index: 1200;
+    display: block;
+    right:0;
+    left:0;
+}
+
+.topbar-box-container {
+    width: 100%;
+    background-color: #f4f4f4;
+    height: 5.5rem;
+    padding: 6px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.topbar-sticky {
+    position: fixed;
+    width: 849px;
+    top: 50px;
+    z-index: 500;
+}
+
+.topbar-non-sticky {
+    position: relative;
+    z-index: 500;
+}

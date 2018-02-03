@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:3001/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="http://localhost:3001/manifest.json">
+    <link rel="shortcut icon" href="http://localhost:3001/favicon.ico">
+    <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./daily_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./daily_files/react-select.css">
+    <link rel="stylesheet" href="./daily_files/app.4.2.css">
+    <link rel="stylesheet" href="./daily_files/tofu.css">
+    <link rel="stylesheet" href="./daily_files/daterangepicker.css" type="text/css">
+    <link rel="stylesheet" href="./daily_files/chartist.min.css">
+    <script src="./daily_files/chartist.min.js.download"></script>
+    <link rel="stylesheet" href="./daily_files/userdash.1.1.css">
+    <!--
+      Notice the use of  in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+</head>
+<body>
+<style>
+    .histo-star {
+        width: 75px;
+        text-align: right;
+    }
+    .slider { margin: 0px auto; overflow: hidden; white-space: nowrap; }
+    .slider, .slider .slider-wrapper { position: relative; width: 100%; height: 100%; }
+    .slider .slider-wrapper .slide { display: inline-block; height: 100%; width: 100%; }
+    .slider-left-arrow, .slider-right-arrow { height: 25px; width: 25px; display: flex; -webkit-box-align: center; align-items: center; -webkit-box-pack: center; justify-content: center; background: rgb(249, 249, 249); border-radius: 50%; cursor: pointer; }
+    .slider-left-arrow, .slider-left-arrow:hover, .slider-right-arrow, .slider-right-arrow:hover { transition: transform 0.1s ease-in, -webkit-transform 0.1s ease-in; }
+    .slider-left-arrow:hover, .slider-right-arrow:hover { transform: scale(1.1); }
+    .slider-right-arrow { position: absolute; top: 50%; right: 8px; z-index: 999; color: rgb(255, 255, 255); }
+    .slider-right-arrow img { transform: translate(2px); }
+    .slider-right-arrow img:focus { outline: 0px; }
+    .slider-left-arrow { position: absolute; top: 50%; left: 8px; z-index: 999; color: rgb(255, 255, 255); }
+    .slider-left-arrow img { transform: translate(-2px); }
+    .slider-left-arrow img:focus { outline: 0px; }
+    .dots-container { position: absolute; bottom: 0px; width: 100%; text-align: center; z-index: 999; padding: 2px 0px; }
+    .dots-container .dot { background: rgb(34, 34, 34); display: inline-block; padding: 3px; margin-right: 2px; cursor: pointer; border-radius: 50%; }
+    .dots-container .active { background: rgb(255, 255, 255); }
+    .autoplay { cursor: pointer; position: absolute; top: 0px; right: 0px; padding: 5px 10px; background: rgb(221, 221, 221); color: rgb(51, 51, 51); font-size: 15px; }
+    .autoplay p { margin: 0px; }
+    .has-errors>.Select-control {
+        background-color: #ffebee;
+    }
+    .not-filled {
+        background-color: #ffebee;
+    }
+    .not-filled .form-control {
+        background-color: #ffebee;
+    }
+    .circle-background,
+    .circle-progress {
+        fill: none;
+    }
+
+    .circle-background {
+        stroke: #ddd;
+    }
+
+    .circle-progress {
+        stroke: #491369;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .circle-text {
+        font-size: 2em;
+        fill: #000;
+    }
+</style>
+<style>
+    .progress-circle {
+        font-size: 20px;
+        margin: 20px;
+        position: relative; /* so that children can be absolutely positioned */
+        padding: 0;
+        width: 5em;
+        height: 5em;
+        background-color: #491369;
+        border-radius: 50%;
+        line-height: 5em;
+    }
+
+    .progress-circle:after{
+        border: none;
+        position: absolute;
+        top: 0.35em;
+        left: 0.35em;
+        text-align: center;
+        display: block;
+        border-radius: 50%;
+        width: 4.3em;
+        height: 4.3em;
+        background-color: white;
+        content: " ";
+    }
+    /* Text inside the control */
+    .progress-circle span {
+        position: absolute;
+        line-height: 5em;
+        width: 5em;
+        text-align: center;
+        display: block;
+        color: #000;
+        z-index: 2;
+    }
+    .left-half-clipper {
+        /* a round circle */
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+        position: absolute; /* needed for clipping */
+        clip: rect(0, 5em, 5em, 2.5em); /* clips the whole left half*/
+    }
+    /* when p>50, don't clip left half*/
+    .progress-circle.over50 .left-half-clipper {
+        clip: rect(auto,auto,auto,auto);
+    }
+    .value-bar {
+        /*This is an overlayed square, that is made round with the border radius,
+        then it is cut to display only the left half, then rotated clockwise
+        to escape the outer clipping path.*/
+        position: absolute; /*needed for clipping*/
+        clip: rect(0, 2.5em, 5em, 0);
+        width: 5em;
+        height: 5em;
+        border-radius: 50%;
+        border: 0.45em solid #491369; /*The border is 0.35 but making it larger removes visual artifacts */
+        /*background-color: #4D642D;*/ /* for debug */
+        box-sizing: border-box;
+
+    }
+    /* Progress bar filling the whole right half for values above 50% */
+    .progress-circle.over50 .first50-bar {
+        /*Progress bar for the first 50%, filling the whole right half*/
+        position: absolute; /*needed for clipping*/
+        clip: rect(0, 5em, 5em, 2.5em);
+        background-color: #491369;
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+    .progress-circle:not(.over50) .first50-bar{ display: none; }
+
+
+    /* Progress bar rotation position */
+    .progress-circle.p0 .value-bar { display: none; }
+    .progress-circle.p1 .value-bar { transform: rotate(4deg); }
+    .progress-circle.p2 .value-bar { transform: rotate(7deg); }
+    .progress-circle.p3 .value-bar { transform: rotate(11deg); }
+    .progress-circle.p4 .value-bar { transform: rotate(14deg); }
+    .progress-circle.p5 .value-bar { transform: rotate(18deg); }
+    .progress-circle.p6 .value-bar { transform: rotate(22deg); }
+    .progress-circle.p7 .value-bar { transform: rotate(25deg); }
+    .progress-circle.p8 .value-bar { transform: rotate(29deg); }
+    .progress-circle.p9 .value-bar { transform: rotate(32deg); }
+    .progress-circle.p10 .value-bar { transform: rotate(36deg); }
+    .progress-circle.p11 .value-bar { transform: rotate(40deg); }
+    .progress-circle.p12 .value-bar { transform: rotate(43deg); }
+    .progress-circle.p13 .value-bar { transform: rotate(47deg); }
+    .progress-circle.p14 .value-bar { transform: rotate(50deg); }
+    .progress-circle.p15 .value-bar { transform: rotate(54deg); }
+    .progress-circle.p16 .value-bar { transform: rotate(58deg); }
+    .progress-circle.p17 .value-bar { transform: rotate(61deg); }
+    .progress-circle.p18 .value-bar { transform: rotate(65deg); }
+    .progress-circle.p19 .value-bar { transform: rotate(68deg); }
+    .progress-circle.p20 .value-bar { transform: rotate(72deg); }
+    .progress-circle.p21 .value-bar { transform: rotate(76deg); }
+    .progress-circle.p22 .value-bar { transform: rotate(79deg); }
+    .progress-circle.p23 .value-bar { transform: rotate(83deg); }
+    .progress-circle.p24 .value-bar { transform: rotate(86deg); }
+    .progress-circle.p25 .value-bar { transform: rotate(90deg); }
+    .progress-circle.p26 .value-bar { transform: rotate(94deg); }
+    .progress-circle.p27 .value-bar { transform: rotate(97deg); }
+    .progress-circle.p28 .value-bar { transform: rotate(101deg); }
+    .progress-circle.p29 .value-bar { transform: rotate(104deg); }
+    .progress-circle.p30 .value-bar { transform: rotate(108deg); }
+    .progress-circle.p31 .value-bar { transform: rotate(112deg); }
+    .progress-circle.p32 .value-bar { transform: rotate(115deg); }
+    .progress-circle.p33 .value-bar { transform: rotate(119deg); }
+    .progress-circle.p34 .value-bar { transform: rotate(122deg); }
+    .progress-circle.p35 .value-bar { transform: rotate(126deg); }
+    .progress-circle.p36 .value-bar { transform: rotate(130deg); }
+    .progress-circle.p37 .value-bar { transform: rotate(133deg); }
+    .progress-circle.p38 .value-bar { transform: rotate(137deg); }
+    .progress-circle.p39 .value-bar { transform: rotate(140deg); }
+    .progress-circle.p40 .value-bar { transform: rotate(144deg); }
+    .progress-circle.p41 .value-bar { transform: rotate(148deg); }
+    .progress-circle.p42 .value-bar { transform: rotate(151deg); }
+    .progress-circle.p43 .value-bar { transform: rotate(155deg); }
+    .progress-circle.p44 .value-bar { transform: rotate(158deg); }
+    .progress-circle.p45 .value-bar { transform: rotate(162deg); }
+    .progress-circle.p46 .value-bar { transform: rotate(166deg); }
+    .progress-circle.p47 .value-bar { transform: rotate(169deg); }
+    .progress-circle.p48 .value-bar { transform: rotate(173deg); }
+    .progress-circle.p49 .value-bar { transform: rotate(176deg); }
+    .progress-circle.p50 .value-bar { transform: rotate(180deg); }
+    .progress-circle.p51 .value-bar { transform: rotate(184deg); }
+    .progress-circle.p52 .value-bar { transform: rotate(187deg); }
+    .progress-circle.p53 .value-bar { transform: rotate(191deg); }
+    .progress-circle.p54 .value-bar { transform: rotate(194deg); }
+    .progress-circle.p55 .value-bar { transform: rotate(198deg); }
+    .progress-circle.p56 .value-bar { transform: rotate(202deg); }
+    .progress-circle.p57 .value-bar { transform: rotate(205deg); }
+    .progress-circle.p58 .value-bar { transform: rotate(209deg); }
+    .progress-circle.p59 .value-bar { transform: rotate(212deg); }
+    .progress-circle.p60 .value-bar { transform: rotate(216deg); }
+    .progress-circle.p61 .value-bar { transform: rotate(220deg); }
+    .progress-circle.p62 .value-bar { transform: rotate(223deg); }
+    .progress-circle.p63 .value-bar { transform: rotate(227deg); }
+    .progress-circle.p64 .value-bar { transform: rotate(230deg); }
+    .progress-circle.p65 .value-bar { transform: rotate(234deg); }
+    .progress-circle.p66 .value-bar { transform: rotate(238deg); }
+    .progress-circle.p67 .value-bar { transform: rotate(241deg); }
+    .progress-circle.p68 .value-bar { transform: rotate(245deg); }
+    .progress-circle.p69 .value-bar { transform: rotate(248deg); }
+    .progress-circle.p70 .value-bar { transform: rotate(252deg); }
+    .progress-circle.p71 .value-bar { transform: rotate(256deg); }
+    .progress-circle.p72 .value-bar { transform: rotate(259deg); }
+    .progress-circle.p73 .value-bar { transform: rotate(263deg); }
+    .progress-circle.p74 .value-bar { transform: rotate(266deg); }
+    .progress-circle.p75 .value-bar { transform: rotate(270deg); }
+    .progress-circle.p76 .value-bar { transform: rotate(274deg); }
+    .progress-circle.p77 .value-bar { transform: rotate(277deg); }
+    .progress-circle.p78 .value-bar { transform: rotate(281deg); }
+    .progress-circle.p79 .value-bar { transform: rotate(284deg); }
+    .progress-circle.p80 .value-bar { transform: rotate(288deg); }
+    .progress-circle.p81 .value-bar { transform: rotate(292deg); }
+    .progress-circle.p82 .value-bar { transform: rotate(295deg); }
+    .progress-circle.p83 .value-bar { transform: rotate(299deg); }
+    .progress-circle.p84 .value-bar { transform: rotate(302deg); }
+    .progress-circle.p85 .value-bar { transform: rotate(306deg); }
+    .progress-circle.p86 .value-bar { transform: rotate(310deg); }
+    .progress-circle.p87 .value-bar { transform: rotate(313deg); }
+    .progress-circle.p88 .value-bar { transform: rotate(317deg); }
+    .progress-circle.p89 .value-bar { transform: rotate(320deg); }
+    .progress-circle.p90 .value-bar { transform: rotate(324deg); }
+    .progress-circle.p91 .value-bar { transform: rotate(328deg); }
+    .progress-circle.p92 .value-bar { transform: rotate(331deg); }
+    .progress-circle.p93 .value-bar { transform: rotate(335deg); }
+    .progress-circle.p94 .value-bar { transform: rotate(338deg); }
+    .progress-circle.p95 .value-bar { transform: rotate(342deg); }
+    .progress-circle.p96 .value-bar { transform: rotate(346deg); }
+    .progress-circle.p97 .value-bar { transform: rotate(349deg); }
+    .progress-circle.p98 .value-bar { transform: rotate(353deg); }
+    .progress-circle.p99 .value-bar { transform: rotate(356deg); }
+    .progress-circle.p100 .value-bar { transform: rotate(360deg); }
+</style>
+<style>
+    .arrowCta {
+        display: inline-block;
+        height: 14px;
+        width: 14px;
+        margin-top: 3px;
+        transform: rotate(45deg);
+        position: relative;
+        -webkit-transform: rotate(-45deg);
+    }
+    .arrowCta:after,
+    .arrowCta:before {
+        content: "";
+        display: block;
+        height: inherit;
+        width: inherit;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .arrowCta:after {
+        border-bottom: 3px solid white;
+        border-right: 3px solid white;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        animation: bottom-arrow 1.65s infinite;
+    }
+    @keyframes bottom-arrow {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        45% {
+            opacity: 1;
+            transform: translate(12px, 12px);
+        }
+        46% {
+            opacity: 0;
+            transform: translate(-16px, -16px);
+        }
+        90% {
+            opacity: 1;
+            transform: translate(-6px, -6px);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-6px, -6px);
+        }
+    }
+    .arrowCta:before {
+        top: 0;
+        left: 0;
+        border-bottom: 3px solid white;
+        border-right: 3px solid white;
+        animation: top-arrow 1.65s infinite;
+    }
+    @keyframes top-arrow {
+        0% {
+            transform: translate(-6px, -6px);
+        }
+        35% {
+            transform: translate(0, 0);
+        }
+        90% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+</style>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<div id="comments"></div>
+<div id="venue"></div>
+<div id="userdashboard"></div>
+<div id="manager-smstemplates"></div>
+<div id="myevent"></div>
+<div id="profile"></div>
+<div id="adminnotifications"></div>
+<div id="usernotifications"></div>
+<div id="mytasklist"></div>
+<div id="myvenuelist"></div>
+<div id="agentlist"></div>
+<div id="myleadsboard"></div>
+<div id="admindashboard"></div>
+<div id="monthlyreport"><div data-reactroot="" class="fluid-container"><div class="row"><div class="col-xs-12"><div class="panel"><div class="panel-heading center" style="text-align: center;"><h1 style="text-align: center;"> Diseases </h1></div><div class="panel-body"><div class="row"><div class="col-xs-6"><div class="panel"><div class="panel-body"><table class="table m-n"><thead style="text-align: center;"><tr style="text-align: center;"><th style="text-align: center;">Quality</th><th style="text-align: center;">Today</th><th style="text-align: center;">Yesterday</th><th style="text-align: center;">Week</th><th style="text-align: center;">Month</th></tr></thead><tbody><tr style="text-align: center;"><td style="text-align: center;">Dengue</td><td style="text-align: center;">3</td><td style="text-align: center;">25</td><td style="text-align: center;">90</td></tr><tr><td style="text-align: center;">Malaria</td><td style="text-align: center;">0</td><td style="text-align: center;">17</td><td style="text-align: center;">43</td></tr><tr><td style="text-align: center;">Cholera</td><td style="text-align: center;">2</td><td style="text-align: center;">41</td><td style="text-align: center;">102</td></tr><tr><td style="text-align: center;">Cancer</td><td style="text-align: center;">0</td><td style="text-align: center;">3</td><td style="text-align: center;">9</td></tr><tr style="text-align: center; background: rgb(252, 248, 227);"><td style="text-align: center;">Total</td><td style="text-align: center;">5</td><td style="text-align: center;">86</td><td style="text-align: center;">244</td></tr></tbody></table></div></div></div><div class="col-xs-6"><div><label class="checkbox-inline" title="" style="padding-left: 100px;"><input type="checkbox" value="on"><!-- react-text: 83 -->Show Dengue<!-- /react-text --></label><label class="checkbox-inline" title=""><input type="checkbox" value="on"><!-- react-text: 86 -->Show Malaria<!-- /react-text --></label><label class="checkbox-inline" title=""><input type="checkbox" value="on"><!-- react-text: 89 -->Show Cholera<!-- /react-text --></label><label class="checkbox-inline" title=""><input type="checkbox" value="on"><!-- react-text: 92 -->Show Cancer<!-- /react-text --></label><div class="recharts-wrapper" style="position: relative; cursor: default; width: 500px; height: 250px;"><svg class="recharts-surface" width="500" height="250" viewBox="0 0 500 250" version="1.1"><g class="recharts-layer recharts-cartesian-axis recharts-xAxis xAxis"><line class="recharts-cartesian-axis-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="80" y1="195" x2="470" y2="195"></line><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="80" y1="201" x2="80" y2="195"></line><text width="390" height="30" x="80" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="80" dy="0.71em">Aug</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="145" y1="201" x2="145" y2="195"></line><text width="390" height="30" x="145" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="145" dy="0.71em">Sep</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="210" y1="201" x2="210" y2="195"></line><text width="390" height="30" x="210" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="210" dy="0.71em">Oct</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="275" y1="201" x2="275" y2="195"></line><text width="390" height="30" x="275" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="275" dy="0.71em">Nov</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="340" y1="201" x2="340" y2="195"></line><text width="390" height="30" x="340" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="340" dy="0.71em">Dec</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="405" y1="201" x2="405" y2="195"></line><text width="390" height="30" x="405" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="405" dy="0.71em">Jan</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="390" height="30" x="80" y="195" stroke="#666" fill="none" x1="470" y1="201" x2="470" y2="195"></line><text width="390" height="30" x="470" y="203" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="middle"><tspan x="470" dy="0.71em">Feb</tspan></text></g></g><text x="275" y="225" class="recharts-text recharts-label" text-anchor="middle" style="padding-top: 0px;"><tspan x="275" dy="0em"></tspan></text></g><g class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis"><line class="recharts-cartesian-axis-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="80" y1="5" x2="80" y2="195"></line><g class="recharts-cartesian-axis-ticks"><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="74" y1="195" x2="80" y2="195"></line><text width="60" height="190" x="72" y="195" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end"><tspan x="72" dy="0.355em">0</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="74" y1="147.5" x2="80" y2="147.5"></line><text width="60" height="190" x="72" y="147.5" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end"><tspan x="72" dy="0.355em">700</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="74" y1="100" x2="80" y2="100"></line><text width="60" height="190" x="72" y="100" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end"><tspan x="72" dy="0.355em">1400</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="74" y1="52.5" x2="80" y2="52.5"></line><text width="60" height="190" x="72" y="52.5" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end"><tspan x="72" dy="0.355em">2100</tspan></text></g><g class="recharts-layer recharts-cartesian-axis-tick"><line class="recharts-cartesian-axis-tick-line" width="60" height="190" x="20" y="5" stroke="#666" fill="none" x1="74" y1="5" x2="80" y2="5"></line><text width="60" height="190" x="72" y="10" stroke="none" fill="#666" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end"><tspan x="72" dy="0.355em">2800</tspan></text></g></g><text x="25" y="100" transform="rotate(-90, 25, 100)" class="recharts-text recharts-label" text-anchor="start"><tspan x="25" dy="0.355em">Patients</tspan></text></g><g class="recharts-cartesian-grid"><g class="recharts-cartesian-grid-horizontal"><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="195" x2="470" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="147.5" x2="470" y2="147.5"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="100" x2="470" y2="100"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="52.5" x2="470" y2="52.5"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="5" x2="470" y2="5"></line></g><g class="recharts-cartesian-grid-vertical"><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="80" y1="5" x2="80" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="145" y1="5" x2="145" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="210" y1="5" x2="210" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="275" y1="5" x2="275" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="340" y1="5" x2="340" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="405" y1="5" x2="405" y2="195"></line><line stroke-dasharray="3 3" stroke="#ccc" fill="none" x="80" y="5" width="390" height="190" x1="470" y1="5" x2="470" y2="195"></line></g></g><g class="recharts-layer recharts-line"><path stroke="#dc143c " stroke-width="1" fill="none" width="390" height="190" class="recharts-curve recharts-line-curve" d="M80,95.58928571428571C101.66666666666667,96.47142857142856,123.33333333333333,97.35357142857143,145,97.35357142857143C166.66666666666666,97.35357142857143,188.33333333333334,84.0875,210,72.92500000000001C231.66666666666666,61.76250000000001,253.33333333333334,39.56190476190477,275,30.378571428571433C296.6666666666667,21.195238095238096,318.3333333333333,16.603571428571428,340,16.603571428571428C361.6666666666667,16.603571428571428,383.3333333333333,21.353571428571428,405,30.853571428571428C426.6666666666667,40.35357142857143,448.3333333333333,109.46607142857142,470,178.57857142857142"></path></g><g class="recharts-layer recharts-line"><path stroke="#000" stroke-width="1" fill="none" width="390" height="190" class="recharts-curve recharts-line-curve" d="M80,171.3857142857143C101.66666666666667,169.95505952380952,123.33333333333333,168.52440476190475,145,166.16071428571428C166.66666666666666,163.7970238095238,188.33333333333334,160.34761904761905,210,157.20357142857142C231.66666666666666,154.0595238095238,253.33333333333334,149.42261904761907,275,147.29642857142858C296.6666666666667,145.1702380952381,318.3333333333333,144.10714285714286,340,144.10714285714286C361.6666666666667,144.10714285714286,383.3333333333333,146.18809523809523,405,150.35C426.6666666666667,154.51190476190476,448.3333333333333,171.70238095238093,470,188.89285714285714"></path></g><g class="recharts-layer recharts-line"><path stroke="#82ca9d" stroke-width="1" fill="none" width="390" height="190" class="recharts-curve recharts-line-curve" d="M80,175.25357142857143C101.66666666666667,176.37321428571428,123.33333333333333,177.49285714285713,145,177.49285714285713C166.66666666666666,177.49285714285713,188.33333333333334,172.92380952380952,210,170.43571428571428C231.66666666666666,167.94761904761904,253.33333333333334,164.4077380952381,275,162.56428571428572C296.6666666666667,160.72083333333333,318.3333333333333,160.1779761904762,340,159.375C361.6666666666667,158.5720238095238,383.3333333333333,157.74642857142857,405,157.74642857142857C426.6666666666667,157.74642857142857,448.3333333333333,174.9482142857143,470,192.15"></path></g><g class="recharts-layer recharts-line"><path stroke="#8884d8" stroke-width="1" fill="none" width="390" height="190" class="recharts-curve recharts-line-curve" d="M80,150.75714285714287C101.66666666666667,151.13035714285715,123.33333333333333,151.50357142857143,145,151.50357142857143C166.66666666666666,151.50357142857143,188.33333333333334,146.66309523809525,210,141.25714285714287C231.66666666666666,135.85119047619048,253.33333333333334,124.10059523809525,275,119.06785714285715C296.6666666666667,114.03511904761905,318.3333333333333,111.06071428571428,340,111.06071428571428C361.6666666666667,111.06071428571428,383.3333333333333,114.20476190476191,405,120.49285714285715C426.6666666666667,126.78095238095239,448.3333333333333,157.46369047619046,470,188.14642857142857"></path></g><g class="recharts-layer recharts-line"><path stroke="#808080" stroke-width="1" fill="none" width="390" height="190" class="recharts-curve recharts-line-curve" d="M80,183.19285714285715C101.66666666666667,184.70833333333334,123.33333333333333,186.22380952380954,145,187.19642857142858C166.66666666666666,188.16904761904763,188.33333333333334,189.02857142857144,210,189.02857142857144C231.66666666666666,189.02857142857144,253.33333333333334,186.45,275,186.45C296.6666666666667,186.45,318.3333333333333,186.925,340,187.06071428571428C361.6666666666667,187.19642857142856,383.3333333333333,187.12857142857143,405,187.2642857142857C426.6666666666667,187.39999999999998,448.3333333333333,190.89464285714286,470,194.3892857142857"></path></g></svg><div class="recharts-legend-wrapper" style="position: absolute; width: 450px; height: auto; left: 20px; bottom: 5px;"><ul class="recharts-default-legend" style="padding: 0px; margin: 0px; text-align: center;"><li class="recharts-legend-item legend-item-0" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path stroke-width="4" fill="none" stroke="#dc143c " d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text">total</span></li><li class="recharts-legend-item legend-item-1" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path stroke-width="4" fill="none" stroke="#000" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text">high</span></li><li class="recharts-legend-item legend-item-2" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path stroke-width="4" fill="none" stroke="#82ca9d" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text">medium</span></li><li class="recharts-legend-item legend-item-3" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path stroke-width="4" fill="none" stroke="#8884d8" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text">low</span></li><li class="recharts-legend-item legend-item-4" style="display: inline-block; margin-right: 10px;"><svg class="recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path stroke-width="4" fill="none" stroke="#808080" d="M0,16h10.666666666666666
+            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
+            H32M21.333333333333332,16
+            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16" class="recharts-legend-icon"></path></svg><span class="recharts-legend-item-text">noStatus</span></li></ul></div><div class="recharts-tooltip-wrapper" style="pointer-events: none; visibility: hidden; position: absolute; top: 0px; transform: translate(80px, 10px);"><div class="recharts-default-tooltip" style="margin: 0px; padding: 10px; background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); white-space: nowrap;"><p class="recharts-tooltip-label" style="margin: 0px;"></p></div></div></div></div></div></div></div></div></div></div><div class="row"><div class="col-xs-12"><div class="panel"><div class="panel-heading"><h1 style="text-align: center;">Rapid Growing Diseases</h1></div><div class="panel-body"><table class="m n table"><thead><tr><td style="text-align: center;"><h3> City </h3></td><td style="text-align: center;"><h3> Flu </h3></td><td style="text-align: center;"><h3>Small Pox</h3></td></tr></thead><tbody><tr><td style="text-align: center;">North Delhi</td><td style="text-align: center;">2</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Dellhi</td><td style="text-align: center;">1</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">delhi</td><td style="text-align: center;">2</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Delhi</td><td style="text-align: center;">1571</td><td style="text-align: center;">8</td></tr><tr><td style="text-align: center;">East Delhi</td><td style="text-align: center;">1</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Banglore</td><td style="text-align: center;">139</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Mumbai</td><td style="text-align: center;">297</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Gurgaon</td><td style="text-align: center;">646</td><td style="text-align: center;">103</td></tr><tr><td style="text-align: center;">West Delhi</td><td style="text-align: center;">2</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Noida</td><td style="text-align: center;">176</td><td style="text-align: center;">1</td></tr><tr><td style="text-align: center;">Faridabad</td><td style="text-align: center;">109</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Bangalore</td><td style="text-align: center;">65</td><td style="text-align: center;">0</td></tr><tr><td style="text-align: center;">Ghaziabad</td><td style="text-align: center;">91</td><td style="text-align: center;">1</td></tr><tr class="warning"><td style="text-align: center;"><strong>Total</strong></td><td style="text-align: center;"><strong>3102</strong></td><td style="text-align: center;"><strong>113</strong></td></tr></tbody></table></div></div></div></div><div id="notification-wrapper"></div></div></div>
+
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+</style>
+<noscript>
+You need to enable JavaScript to run this app.
+</noscript>
+<div id="comments"></div>
+<div id="profile"></div>
+<!--
+This HTML file is a template.
+If you open it directly in the browser, you will see an empty page.
+
+You can add webfonts, meta tags, or analytics to this file.
+The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+<input id="vm-userid" value="599c0191e702dc0048379d81" hidden="">
+<input id="vm-agentid" value="583c2ee95e3e24b01b23a184" hidden="">
+<input id="vm-pageid" value="events" hidden="">
+<input id="event-enquiry-num" hidden="" type="text" class="form-control hide" value="VME0014614">
+<input id="eventId" hidden="" type="text" class="form-control hide" value="5a3798b96d3607004b853a64">
+<input id="bundleId" hidden="" type="text" class="form-control hide" value="59c8a6a10c09990970019b6e">
+<input id="event-username" hidden="" type="text" class="form-control hide" value="Ritwik Sahoo">
+<input id="event-useremail" hidden="" type="text" class="form-control hide" value="ritwik@venuemonk.com">
+<input id="event-userphone" hidden="" type="text" class="form-control hide" value="9466266968">
+<input type="text" id="vm-reviewid" class="hide" value="599c0f846233e5251cf5b323">
+<input type="text" id="vm-venueid" class="hide" value="56d6aff0ca78640300fe3179">
+<script type="text/javascript" src="./daily_files/bundle.js.download"></script>
+
+<span id="recharts_measurement_span" style="position:absolute;top:-20000px;left:0px;padding:0px;margin:0px;border:none;white-space:pre;">0</span></body></html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:3001/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="http://localhost:3001/manifest.json">
+    <link rel="shortcut icon" href="http://localhost:3001/favicon.ico">
+    <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./report_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./report_files/react-select.css">
+    <link rel="stylesheet" href="./report_files/app.4.2.css">
+    <link rel="stylesheet" href="./report_files/tofu.css">
+    <link rel="stylesheet" href="./report_files/daterangepicker.css" type="text/css">
+    <link rel="stylesheet" href="./report_files/chartist.min.css">
+    <script src="./report_files/chartist.min.js.download"></script>
+    <link rel="stylesheet" href="./report_files/userdash.1.1.css">
+    <!--
+      Notice the use of  in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+</head>
+<body>
+<style>
+    .histo-star {
+        width: 75px;
+        text-align: right;
+    }
+    .slider { margin: 0px auto; overflow: hidden; white-space: nowrap; }
+    .slider, .slider .slider-wrapper { position: relative; width: 100%; height: 100%; }
+    .slider .slider-wrapper .slide { display: inline-block; height: 100%; width: 100%; }
+    .slider-left-arrow, .slider-right-arrow { height: 25px; width: 25px; display: flex; -webkit-box-align: center; align-items: center; -webkit-box-pack: center; justify-content: center; background: rgb(249, 249, 249); border-radius: 50%; cursor: pointer; }
+    .slider-left-arrow, .slider-left-arrow:hover, .slider-right-arrow, .slider-right-arrow:hover { transition: transform 0.1s ease-in, -webkit-transform 0.1s ease-in; }
+    .slider-left-arrow:hover, .slider-right-arrow:hover { transform: scale(1.1); }
+    .slider-right-arrow { position: absolute; top: 50%; right: 8px; z-index: 999; color: rgb(255, 255, 255); }
+    .slider-right-arrow img { transform: translate(2px); }
+    .slider-right-arrow img:focus { outline: 0px; }
+    .slider-left-arrow { position: absolute; top: 50%; left: 8px; z-index: 999; color: rgb(255, 255, 255); }
+    .slider-left-arrow img { transform: translate(-2px); }
+    .slider-left-arrow img:focus { outline: 0px; }
+    .dots-container { position: absolute; bottom: 0px; width: 100%; text-align: center; z-index: 999; padding: 2px 0px; }
+    .dots-container .dot { background: rgb(34, 34, 34); display: inline-block; padding: 3px; margin-right: 2px; cursor: pointer; border-radius: 50%; }
+    .dots-container .active { background: rgb(255, 255, 255); }
+    .autoplay { cursor: pointer; position: absolute; top: 0px; right: 0px; padding: 5px 10px; background: rgb(221, 221, 221); color: rgb(51, 51, 51); font-size: 15px; }
+    .autoplay p { margin: 0px; }
+    .has-errors>.Select-control {
+        background-color: #ffebee;
+    }
+    .not-filled {
+        background-color: #ffebee;
+    }
+    .not-filled .form-control {
+        background-color: #ffebee;
+    }
+    .circle-background,
+    .circle-progress {
+        fill: none;
+    }
+
+    .circle-background {
+        stroke: #ddd;
+    }
+
+    .circle-progress {
+        stroke: #491369;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .circle-text {
+        font-size: 2em;
+        fill: #000;
+    }
+</style>
+<style>
+    .progress-circle {
+        font-size: 20px;
+        margin: 20px;
+        position: relative; /* so that children can be absolutely positioned */
+        padding: 0;
+        width: 5em;
+        height: 5em;
+        background-color: #491369;
+        border-radius: 50%;
+        line-height: 5em;
+    }
+
+    .progress-circle:after{
+        border: none;
+        position: absolute;
+        top: 0.35em;
+        left: 0.35em;
+        text-align: center;
+        display: block;
+        border-radius: 50%;
+        width: 4.3em;
+        height: 4.3em;
+        background-color: white;
+        content: " ";
+    }
+    /* Text inside the control */
+    .progress-circle span {
+        position: absolute;
+        line-height: 5em;
+        width: 5em;
+        text-align: center;
+        display: block;
+        color: #000;
+        z-index: 2;
+    }
+    .left-half-clipper {
+        /* a round circle */
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+        position: absolute; /* needed for clipping */
+        clip: rect(0, 5em, 5em, 2.5em); /* clips the whole left half*/
+    }
+    /* when p>50, don't clip left half*/
+    .progress-circle.over50 .left-half-clipper {
+        clip: rect(auto,auto,auto,auto);
+    }
+    .value-bar {
+        /*This is an overlayed square, that is made round with the border radius,
+        then it is cut to display only the left half, then rotated clockwise
+        to escape the outer clipping path.*/
+        position: absolute; /*needed for clipping*/
+        clip: rect(0, 2.5em, 5em, 0);
+        width: 5em;
+        height: 5em;
+        border-radius: 50%;
+        border: 0.45em solid #491369; /*The border is 0.35 but making it larger removes visual artifacts */
+        /*background-color: #4D642D;*/ /* for debug */
+        box-sizing: border-box;
+
+    }
+    /* Progress bar filling the whole right half for values above 50% */
+    .progress-circle.over50 .first50-bar {
+        /*Progress bar for the first 50%, filling the whole right half*/
+        position: absolute; /*needed for clipping*/
+        clip: rect(0, 5em, 5em, 2.5em);
+        background-color: #491369;
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+    .progress-circle:not(.over50) .first50-bar{ display: none; }
+
+
+    /* Progress bar rotation position */
+    .progress-circle.p0 .value-bar { display: none; }
+    .progress-circle.p1 .value-bar { transform: rotate(4deg); }
+    .progress-circle.p2 .value-bar { transform: rotate(7deg); }
+    .progress-circle.p3 .value-bar { transform: rotate(11deg); }
+    .progress-circle.p4 .value-bar { transform: rotate(14deg); }
+    .progress-circle.p5 .value-bar { transform: rotate(18deg); }
+    .progress-circle.p6 .value-bar { transform: rotate(22deg); }
+    .progress-circle.p7 .value-bar { transform: rotate(25deg); }
+    .progress-circle.p8 .value-bar { transform: rotate(29deg); }
+    .progress-circle.p9 .value-bar { transform: rotate(32deg); }
+    .progress-circle.p10 .value-bar { transform: rotate(36deg); }
+    .progress-circle.p11 .value-bar { transform: rotate(40deg); }
+    .progress-circle.p12 .value-bar { transform: rotate(43deg); }
+    .progress-circle.p13 .value-bar { transform: rotate(47deg); }
+    .progress-circle.p14 .value-bar { transform: rotate(50deg); }
+    .progress-circle.p15 .value-bar { transform: rotate(54deg); }
+    .progress-circle.p16 .value-bar { transform: rotate(58deg); }
+    .progress-circle.p17 .value-bar { transform: rotate(61deg); }
+    .progress-circle.p18 .value-bar { transform: rotate(65deg); }
+    .progress-circle.p19 .value-bar { transform: rotate(68deg); }
+    .progress-circle.p20 .value-bar { transform: rotate(72deg); }
+    .progress-circle.p21 .value-bar { transform: rotate(76deg); }
+    .progress-circle.p22 .value-bar { transform: rotate(79deg); }
+    .progress-circle.p23 .value-bar { transform: rotate(83deg); }
+    .progress-circle.p24 .value-bar { transform: rotate(86deg); }
+    .progress-circle.p25 .value-bar { transform: rotate(90deg); }
+    .progress-circle.p26 .value-bar { transform: rotate(94deg); }
+    .progress-circle.p27 .value-bar { transform: rotate(97deg); }
+    .progress-circle.p28 .value-bar { transform: rotate(101deg); }
+    .progress-circle.p29 .value-bar { transform: rotate(104deg); }
+    .progress-circle.p30 .value-bar { transform: rotate(108deg); }
+    .progress-circle.p31 .value-bar { transform: rotate(112deg); }
+    .progress-circle.p32 .value-bar { transform: rotate(115deg); }
+    .progress-circle.p33 .value-bar { transform: rotate(119deg); }
+    .progress-circle.p34 .value-bar { transform: rotate(122deg); }
+    .progress-circle.p35 .value-bar { transform: rotate(126deg); }
+    .progress-circle.p36 .value-bar { transform: rotate(130deg); }
+    .progress-circle.p37 .value-bar { transform: rotate(133deg); }
+    .progress-circle.p38 .value-bar { transform: rotate(137deg); }
+    .progress-circle.p39 .value-bar { transform: rotate(140deg); }
+    .progress-circle.p40 .value-bar { transform: rotate(144deg); }
+    .progress-circle.p41 .value-bar { transform: rotate(148deg); }
+    .progress-circle.p42 .value-bar { transform: rotate(151deg); }
+    .progress-circle.p43 .value-bar { transform: rotate(155deg); }
+    .progress-circle.p44 .value-bar { transform: rotate(158deg); }
+    .progress-circle.p45 .value-bar { transform: rotate(162deg); }
+    .progress-circle.p46 .value-bar { transform: rotate(166deg); }
+    .progress-circle.p47 .value-bar { transform: rotate(169deg); }
+    .progress-circle.p48 .value-bar { transform: rotate(173deg); }
+    .progress-circle.p49 .value-bar { transform: rotate(176deg); }
+    .progress-circle.p50 .value-bar { transform: rotate(180deg); }
+    .progress-circle.p51 .value-bar { transform: rotate(184deg); }
+    .progress-circle.p52 .value-bar { transform: rotate(187deg); }
+    .progress-circle.p53 .value-bar { transform: rotate(191deg); }
+    .progress-circle.p54 .value-bar { transform: rotate(194deg); }
+    .progress-circle.p55 .value-bar { transform: rotate(198deg); }
+    .progress-circle.p56 .value-bar { transform: rotate(202deg); }
+    .progress-circle.p57 .value-bar { transform: rotate(205deg); }
+    .progress-circle.p58 .value-bar { transform: rotate(209deg); }
+    .progress-circle.p59 .value-bar { transform: rotate(212deg); }
+    .progress-circle.p60 .value-bar { transform: rotate(216deg); }
+    .progress-circle.p61 .value-bar { transform: rotate(220deg); }
+    .progress-circle.p62 .value-bar { transform: rotate(223deg); }
+    .progress-circle.p63 .value-bar { transform: rotate(227deg); }
+    .progress-circle.p64 .value-bar { transform: rotate(230deg); }
+    .progress-circle.p65 .value-bar { transform: rotate(234deg); }
+    .progress-circle.p66 .value-bar { transform: rotate(238deg); }
+    .progress-circle.p67 .value-bar { transform: rotate(241deg); }
+    .progress-circle.p68 .value-bar { transform: rotate(245deg); }
+    .progress-circle.p69 .value-bar { transform: rotate(248deg); }
+    .progress-circle.p70 .value-bar { transform: rotate(252deg); }
+    .progress-circle.p71 .value-bar { transform: rotate(256deg); }
+    .progress-circle.p72 .value-bar { transform: rotate(259deg); }
+    .progress-circle.p73 .value-bar { transform: rotate(263deg); }
+    .progress-circle.p74 .value-bar { transform: rotate(266deg); }
+    .progress-circle.p75 .value-bar { transform: rotate(270deg); }
+    .progress-circle.p76 .value-bar { transform: rotate(274deg); }
+    .progress-circle.p77 .value-bar { transform: rotate(277deg); }
+    .progress-circle.p78 .value-bar { transform: rotate(281deg); }
+    .progress-circle.p79 .value-bar { transform: rotate(284deg); }
+    .progress-circle.p80 .value-bar { transform: rotate(288deg); }
+    .progress-circle.p81 .value-bar { transform: rotate(292deg); }
+    .progress-circle.p82 .value-bar { transform: rotate(295deg); }
+    .progress-circle.p83 .value-bar { transform: rotate(299deg); }
+    .progress-circle.p84 .value-bar { transform: rotate(302deg); }
+    .progress-circle.p85 .value-bar { transform: rotate(306deg); }
+    .progress-circle.p86 .value-bar { transform: rotate(310deg); }
+    .progress-circle.p87 .value-bar { transform: rotate(313deg); }
+    .progress-circle.p88 .value-bar { transform: rotate(317deg); }
+    .progress-circle.p89 .value-bar { transform: rotate(320deg); }
+    .progress-circle.p90 .value-bar { transform: rotate(324deg); }
+    .progress-circle.p91 .value-bar { transform: rotate(328deg); }
+    .progress-circle.p92 .value-bar { transform: rotate(331deg); }
+    .progress-circle.p93 .value-bar { transform: rotate(335deg); }
+    .progress-circle.p94 .value-bar { transform: rotate(338deg); }
+    .progress-circle.p95 .value-bar { transform: rotate(342deg); }
+    .progress-circle.p96 .value-bar { transform: rotate(346deg); }
+    .progress-circle.p97 .value-bar { transform: rotate(349deg); }
+    .progress-circle.p98 .value-bar { transform: rotate(353deg); }
+    .progress-circle.p99 .value-bar { transform: rotate(356deg); }
+    .progress-circle.p100 .value-bar { transform: rotate(360deg); }
+</style>
+<style>
+    .arrowCta {
+        display: inline-block;
+        height: 14px;
+        width: 14px;
+        margin-top: 3px;
+        transform: rotate(45deg);
+        position: relative;
+        -webkit-transform: rotate(-45deg);
+    }
+    .arrowCta:after,
+    .arrowCta:before {
+        content: "";
+        display: block;
+        height: inherit;
+        width: inherit;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .arrowCta:after {
+        border-bottom: 3px solid white;
+        border-right: 3px solid white;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        animation: bottom-arrow 1.65s infinite;
+    }
+    @keyframes bottom-arrow {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        45% {
+            opacity: 1;
+            transform: translate(12px, 12px);
+        }
+        46% {
+            opacity: 0;
+            transform: translate(-16px, -16px);
+        }
+        90% {
+            opacity: 1;
+            transform: translate(-6px, -6px);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-6px, -6px);
+        }
+    }
+    .arrowCta:before {
+        top: 0;
+        left: 0;
+        border-bottom: 3px solid white;
+        border-right: 3px solid white;
+        animation: top-arrow 1.65s infinite;
+    }
+    @keyframes top-arrow {
+        0% {
+            transform: translate(-6px, -6px);
+        }
+        35% {
+            transform: translate(0, 0);
+        }
+        90% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    }
+</style>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<div id="comments"></div>
+<div id="venue"></div>
+<div id="userdashboard"></div>
+<div id="manager-smstemplates"></div>
+<div id="myevent"></div>
+<div id="profile"></div>
+<div id="adminnotifications"></div>
+<div id="usernotifications"></div>
+<div id="mytasklist"></div>
+<div id="myvenuelist"></div>
+<div id="agentlist"></div>
+<div id="myleadsboard"></div>
+<div id="admindashboard"></div>
+<div id="monthlyreport"><div data-reactroot="" class="fluid-container"><div class="row"><div class="col-xs-6"><div class="form-group"><span class="input-group"><input type="text" value="01-02-2018 - 28-02-2018 " class="form-control"><span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span></span></div></div></div><div class="row"><div class="col-xs-6"><div class="panel"><div class="panel-heading"><h1 style="text-align: center;">Disease Spread(City)</h1></div><div class="panel-body"><table class="m n table"><thead><tr><td style="text-align: center;"><h4>Malaria</h4></td><td style="text-align: center;"><h4>Chlora</h4></td><td style="text-align: center;"><h4>Dengue</h4></td><td style="text-align: center;"><h4>Cancer</h4></td><td style="text-align: center;"><h4>Total</h4></td></tr></thead><tbody class="table-striped"><tr><td style="text-align: center;">1</td><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">3</td><td style="text-align: center;">3</td></tr><tr><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">1</td><td style="text-align: center;">1</td></tr><tr><td style="text-align: center;">6</td><td style="text-align: center;">3</td><td style="text-align: center;">0</td><td style="text-align: center;">4</td><td style="text-align: center;">13</td></tr><tr><td style="text-align: center;">1</td><td style="text-align: center;">2</td><td style="text-align: center;">0</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr><td style="text-align: center;">3</td><td style="text-align: center;">3</td><td style="text-align: center;">0</td><td style="text-align: center;">6</td><td style="text-align: center;">12</td></tr><tr><td style="text-align: center;">2</td><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">10</td><td style="text-align: center;">12</td></tr></tbody></table></div></div></div><div class="col-xs-6"><div class="panel"><div class="panel-heading"><h1 style="text-align: center;">Patients (Count)</h1></div><div class="panel-body">No Patients yet</div></div></div><div id="notification-wrapper"></div></div></div></div>
+
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+</style>
+<noscript>
+You need to enable JavaScript to run this app.
+</noscript>
+<div id="comments"></div>
+<div id="profile"></div>
+<!--
+This HTML file is a template.
+If you open it directly in the browser, you will see an empty page.
+
+You can add webfonts, meta tags, or analytics to this file.
+The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+<input id="vm-userid" value="599c0191e702dc0048379d81" hidden="">
+<input id="vm-agentid" value="583c2ee95e3e24b01b23a184" hidden="">
+<input id="vm-pageid" value="events" hidden="">
+<input id="event-enquiry-num" hidden="" type="text" class="form-control hide" value="VME0014614">
+<input id="eventId" hidden="" type="text" class="form-control hide" value="5a3798b96d3607004b853a64">
+<input id="bundleId" hidden="" type="text" class="form-control hide" value="59c8a6a10c09990970019b6e">
+<input id="event-username" hidden="" type="text" class="form-control hide" value="Ritwik Sahoo">
+<input id="event-useremail" hidden="" type="text" class="form-control hide" value="ritwik@venuemonk.com">
+<input id="event-userphone" hidden="" type="text" class="form-control hide" value="9466266968">
+<input type="text" id="vm-reviewid" class="hide" value="599c0f846233e5251cf5b323">
+<input type="text" id="vm-venueid" class="hide" value="56d6aff0ca78640300fe3179">
+<script type="text/javascript" src="./report_files/bundle.js.download"></script><div class="daterangepicker dropdown-menu ltr show-calendar opensright"><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last_7_Days">Last_7_Days</li><li data-range-key="Last_30_Days">Last_30_Days</li><li data-range-key="This_Month">This_Month</li><li data-range-key="Last_Month">Last_Month</li><li data-range-key="Custom Range">Custom Range</li></ul><div class="range_inputs"><button class="applyBtn btn btn-sm btn-success" disabled="disabled" type="button">Apply</button> <button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button></div></div><div class="calendar left"><div class="daterangepicker_input"><input class="input-mini form-control" type="text" name="daterangepicker_start" value=""><i class="fa fa-calendar glyphicon glyphicon-calendar"></i><div class="calendar-time" style="display: none;"><div></div><i class="fa fa-clock-o glyphicon glyphicon-time"></i></div></div><div class="calendar-table"></div></div><div class="calendar right"><div class="daterangepicker_input"><input class="input-mini form-control" type="text" name="daterangepicker_end" value=""><i class="fa fa-calendar glyphicon glyphicon-calendar"></i><div class="calendar-time" style="display: none;"><div></div><i class="fa fa-clock-o glyphicon glyphicon-time"></i></div></div><div class="calendar-table"></div></div></div>
+
+</body></html>

@@ -1,0 +1,74 @@
+<html>
+<head>
+    <title> Patient </title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<nav class="navbar navbar-inverse navbar-fixed-top" id="mynavbar">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li> <a href="index.html">Home</a>
+                <li> <a href = "src/patient.html">Patients</a> </li>
+                <li> <a href = "src/hospitals.html">Hospitals</a> </li>
+                <li> <a href = "record.php">Symptoms</a> </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br> <br>
+<body bgcolor="#e6e6ff">
+<form action="/patient_url/" method="post">
+    <label for="patient_name">Enter name: </label>
+    <input id="patient_name" type="text" name="patient_name">
+    <br>
+    <label for="date_of_birth">Enter Date Of Birth: </label>
+    <input id="date_of_birth" type="date" name="date_of_birth">
+    <br>
+    <label for="contact_email">Enter Email: </label>
+    <input id="contact_email" type="email" name="contact_email">
+    <br>
+    <label for="contact_phone">Enter Phone no.: </label>
+    <input id="contact_phone" type="text" name="contact_phone">
+    <br>
+    <label for="date">Enter Date: </label>
+    <input id="date" type="date" name="date">
+    <br>
+    <label for="status">Enter Status: </label>
+    <input id="status" type="text" name="status">
+    <br>
+    <label for="payment_status">Enter Payment Status: </label>
+    <input id="payment_status" type="text" name="payment_status">
+    <br>
+    <label for="hospital_name">Enter Hospital Name: </label>
+    <input id="hospital_name" type="text" name="hospital_name">
+    <br>
+    <label for="symptoms">Enter Symptoms: </label>
+    <input id="symptoms" type="text" name="symptoms">
+    <br>
+    <label for="blood_group">Enter Blood Group: </label>
+    <input id="blood_group" type="text" name="blood_group">
+    <br>
+    <label for="previous_record">Is there any previous Record: </label>
+    <input id="previous_record" type="text" name="previous_record">
+    <br>
+    <label for="previous_disease">Previous Diseases: </label>
+    <input id="previous_disease" type="text" name="previous_disease">
+    <br>
+    <input type="submit" value="OK">
+</form>
+</body>
+<footer>
+    <p class = "copy"> &copy Dexter corporation India</p>
+</footer>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</html>

@@ -15,3 +15,18 @@ form{
 body{
     background: #e6e6ff;
 }
+
+   li:hover {
+    background-color: #C8C8C8 ;
+}
+ .blue {
+    color: green;
+}
+      form {
+          padding-left: 20px;
+          padding-right: 10px;
+      }
+    .b
+{
+    margin-bottom:90px;
+}

@@ -3,8 +3,11 @@
     <title> Hospital </title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <nav class="navbar navbar-inverse navbar-fixed-top" id="mynavbar">
     <div class="container">
@@ -37,31 +40,116 @@
     <tr>
         <td> <img src="assests\image\maxhospital.png"  class="image-responsive" width="100" height="100"></td>
         <td>Max Hospital</td>
-        <td><button>View</button></td>
+        <td>
+		<button id="show">View</button><br>	
+	</td>
+	<td>
+		<p id="p">Total Wards:50
+ 			  Available Wards:20<br>
+			  Total Beds:200
+			  Available Beds:50<br>
+			  Available Blood Unit:200<br>
+			<button>Contact</button>			
+			</p>
+	</td>
     </tr>
-    <tr>
+	<tr>
         <td> <img src="assests\image\apollo.png"  class="image-responsive" width="100" height="100"></td>
         <td>Apollo Hospital</td>
-        <td><button>View</button></td>
+        <td><button id="show1">View</button></td>
+	
+	<td>
+		<p id="p1">Total Wards:50
+ 			  Available Wards:20<br>
+			  Total Beds:200
+			  Available Beds:50<br>
+			  Available Blood Unit:200<br>
+			<button>Contact</button>
+		</p>
+	</td>
     </tr>
     <tr>
         <td> <img src="assests\image\bhu.png"  class="image-responsive" width="100" height="100"></td>
         <td>BHU</td>
-        <td><button>View</button></td>
+        <td><button id="show2">View</button></td>
+	<td>
+		<p id="p2">Total Wards:50
+ 			  Available Wards:20<br>
+			  Total Beds:200
+			  Available Beds:50<br>
+			  Available Blood Unit:200<br>
+			<button>Contact</button>		
+</p>
+	</td>
     </tr>
+	
     <tr>
         <td> <img src="assests\image\aiims.png"  class="image-responsive" width="100" height="100"></td>
         <td>Aiims Hospital</td>
-        <td><button>View</button></td>
+        <td><button id="show3">View</button></td>
+    	<td>
+		<p id="p3">Total Wards:50
+ 			  Available Wards:20<br>
+			  Total Beds:200
+			  Available Beds:50<br>
+			  Available Blood Unit:200<br>
+			<button>Contact</button>
+		</p>
+	</td>
     </tr>
     <tr>
         <td> <img src="assests\image\sharda.png"  class="image-responsive" width="100" height="100"></td>
         <td>Sharda Hospital</td>
-        <td><button>View</button></td>
-    </tr>
+        <td><button id="show4">View</button></td>
+   	<td>
+		<p id="p4">Total Wards:50
+ 			  Available Wards:20<br>
+			  Total Beds:200
+			  Available Beds:50<br>
+			  Available Blood Unit:200<br>
+			<button>Contact</button>
+		</p>
+	</td>
+    </tr> 
+   </tr>
 </table>
 
 </body>
+<script>
+$(document).ready(function(){
+    $("#hide").ready(function(){
+        $("#p").hide();
+    });
+    $("#hide").ready(function(){
+        $("#p1").hide();
+    });
+    $("#hide").ready(function(){
+        $("#p2").hide();
+    });
+    $("#hide").ready(function(){
+        $("#p3").hide();
+    });
+    $("#hide").ready(function(){
+        $("#p4").hide();
+    });
+    $("#show").click(function(){
+        $("#p").show();
+    });
+    $("#show1").click(function(){
+        $("#p1").show();
+    });
+    $("#show2").click(function(){
+        $("#p2").show();
+    });
+    $("#show3").click(function(){
+        $("#p3").show();
+    });
+    
+    $("#show4").click(function(){
+        $("#p4").show();
+    });
+});
+</script>
 <footer>
     <p class = "copy"> &copy Dexter corporation India</p>
 </footer>
